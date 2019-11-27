@@ -2,7 +2,7 @@ import { inject, register } from "omusubi";
 import { UsersPort, UserNotFoundError, UserAlreadyExistError } from "../port";
 import { User, LoginId, Users } from "../domain";
 import { UsersGateway } from "../gateway";
-import { UsersDriver } from "../driver";
+import { UsersDriver, Database } from "../driver";
 
 export class UsersUsecase {
   @inject(UsersPort)
@@ -34,6 +34,7 @@ export class UsersUsecase {
 }
 
 export function getUsecases(): { usersUsecase: UsersUsecase } {
+  register(new Database("./data.db")).as(Database);
   register(new UsersGateway()).as(UsersPort);
   register(new UsersDriver()).as(UsersDriver);
   return {
