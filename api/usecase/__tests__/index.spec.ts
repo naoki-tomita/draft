@@ -45,23 +45,26 @@ describe("UsersUsecase", () => {
   });
   describe("create", () => {
     it("should returns User.", async () => {
+      const findById = usersPort.findById = jest.fn();
       const create = usersPort.create = jest.fn();
       const user = jest.fn();
       const id = new LoginId("id")
 
+      when(findById).calledWith(id).mockReturnValueOnce(null);
       when(create).calledWith(id).mockReturnValueOnce(user);
 
       expect(await usersUsecase.create(id)).toBe(user);
       when(create).expectCalledWith(id);
     });
     it("should throw exception when already exists.", () => {
-      const create = usersPort.create = jest.fn();
+      const findById = usersPort.findById = jest.fn();
+      const user = jest.fn();
       const id = new LoginId("id")
 
-      when(create).calledWith(id).mockReturnValueOnce(null);
+      when(findById).calledWith(id).mockReturnValueOnce(user);
 
       expect(usersUsecase.create(id)).rejects.toThrow();
-      when(create).expectCalledWith(id);
+      when(findById).expectCalledWith(id);
     });
   });
 });

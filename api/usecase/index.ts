@@ -1,5 +1,5 @@
 import { inject, register } from "omusubi";
-import { UsersPort, UserNotFoundError } from "../port";
+import { UsersPort, UserNotFoundError, UserAlreadyExistError } from "../port";
 import { User, LoginId, Users } from "../domain";
 import { UsersGateway } from "../gateway";
 import { UsersDriver } from "../driver";
@@ -9,9 +9,13 @@ export class UsersUsecase {
   usersPort: UsersPort;
 
   async create(id: LoginId): Promise<User> {
+    const exist = await this.usersPort.findById(id);
+    if (exist) {
+      throw new UserAlreadyExistError(`user ${id.value} already exists.`);
+    }
     const user = await this.usersPort.create(id);
     if (!user) {
-      throw new UserNotFoundError(`user ${id.value} not found.`);
+      throw new Error("something went wrong.");
     }
     return user;
   }
