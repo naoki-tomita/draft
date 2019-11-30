@@ -32,7 +32,8 @@
   },
   "scripts": {
     "build": "next build",
-    "start": "next start -p 80",
+    "local": "next start",
+    "start": "next build && next start -p $PORT",
     "dev": "next dev -p 80",
     "test": "jest",
     "setup": "ts-node --project tools/tsconfig.json tools/setup.ts",
