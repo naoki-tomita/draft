@@ -1,8 +1,8 @@
-import { UsersUsecase } from "../";
+import { UsersUsecase, CandidatesUsecase } from "../";
 import { register } from "omusubi";
-import { UsersPort, UserNotFoundError } from "../../port";
+import { UsersPort, CandidatesPort } from "../../port";
 import { when } from "jest-when";
-import { LoginId } from "../../domain";
+import { LoginId, CandidateId, UserId, User, Recommend, RecommendMessage } from "../../domain";
 
 describe("UsersUsecase", () => {
   let usersPort: UsersPort;
@@ -24,28 +24,28 @@ describe("UsersUsecase", () => {
   });
   describe("findById", () => {
     it("should returns User.", async () => {
-      const findById = usersPort.findById = jest.fn();
+      const findById = usersPort.findByLoginId = jest.fn();
       const user = jest.fn();
       const id = new LoginId("id")
 
       when(findById).calledWith(id).mockReturnValueOnce(user);
 
-      expect(await usersUsecase.findById(id)).toBe(user);
+      expect(await usersUsecase.findByLoginId(id)).toBe(user);
       when(findById).expectCalledWith(id);
     });
     it("should throw exeption if not found user.", async () => {
-      const findById = usersPort.findById = jest.fn();
+      const findById = usersPort.findByLoginId = jest.fn();
       const id = new LoginId("id")
 
       when(findById).calledWith(id).mockReturnValueOnce(null);
 
-      expect(usersUsecase.findById(id)).rejects.toThrow();
+      expect(usersUsecase.findByLoginId(id)).rejects.toThrow();
       when(findById).expectCalledWith(id);
     });
   });
   describe("create", () => {
     it("should returns User.", async () => {
-      const findById = usersPort.findById = jest.fn();
+      const findById = usersPort.findByLoginId = jest.fn();
       const create = usersPort.create = jest.fn();
       const user = jest.fn();
       const id = new LoginId("id")
@@ -57,7 +57,7 @@ describe("UsersUsecase", () => {
       when(create).expectCalledWith(id);
     });
     it("should throw exception when already exists.", () => {
-      const findById = usersPort.findById = jest.fn();
+      const findById = usersPort.findByLoginId = jest.fn();
       const user = jest.fn();
       const id = new LoginId("id")
 
@@ -65,6 +65,49 @@ describe("UsersUsecase", () => {
 
       expect(usersUsecase.create(id)).rejects.toThrow();
       when(findById).expectCalledWith(id);
+    });
+  });
+});
+
+describe("RecommendsUsecase", () => {
+  let recommendsPort: CandidatesPort;
+  let recommendsUsecase: CandidatesUsecase;
+  beforeEach(() => {
+    recommendsPort = {} as any;
+    register(recommendsPort).as(CandidatesPort);
+    recommendsUsecase = new CandidatesUsecase();
+  });
+  describe("list", () => {
+    it("should returns Users.", async () => {
+      const list = recommendsPort.list = jest.fn();
+      const candidates = jest.fn();
+
+      when(list).calledWith().mockReturnValueOnce(candidates);
+
+      expect(await recommendsUsecase.list()).toBe(candidates);
+    });
+  });
+  describe("findById", () => {
+    it("should returns User.", async () => {
+      const findById = recommendsPort.findById = jest.fn();
+      const recommends = jest.fn();
+      const id = new CandidateId(123);
+
+      when(findById).calledWith(id).mockReturnValueOnce(recommends);
+
+      expect(await recommendsUsecase.findById(id)).toBe(recommends);
+      when(findById).expectCalledWith(id);
+    });
+  });
+  describe("create", () => {
+    it("should call create.", async () => {
+      const create = recommendsPort.create = jest.fn();
+      const id = new CandidateId(99);
+      const loginId = new LoginId("id");
+      const recommend = new RecommendMessage("osusume");
+
+      await recommendsUsecase.create(id, loginId, recommend);
+      when(create).expectCalledWith(id, loginId, recommend)
     });
   });
 });

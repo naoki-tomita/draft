@@ -1,15 +1,15 @@
 import { inject, register } from "omusubi";
-import { UsersPort, UserNotFoundError, UserAlreadyExistError } from "../port";
-import { User, LoginId, Users } from "../domain";
-import { UsersGateway } from "../gateway";
-import { UsersDriver, Database } from "../driver";
+import { UsersPort, UserNotFoundError, UserAlreadyExistError, CandidatesPort } from "../port";
+import { User, LoginId, Users, CandidateId, RecommendMessage, Recommends, Candidate, Candidates } from "../domain";
+import { UsersGateway, CandidatesGateway } from "../gateway";
+import { UsersDriver, Database, RecommendsDriver } from "../driver";
 
 export class UsersUsecase {
   @inject(UsersPort)
   usersPort: UsersPort;
 
   async create(id: LoginId): Promise<User> {
-    const exist = await this.usersPort.findById(id);
+    const exist = await this.usersPort.findByLoginId(id);
     if (exist) {
       throw new UserAlreadyExistError(`user ${id.value} already exists.`);
     }
@@ -20,8 +20,8 @@ export class UsersUsecase {
     return user;
   }
 
-  async findById(id: LoginId): Promise<User> {
-    const user = await this.usersPort.findById(id);
+  async findByLoginId(id: LoginId): Promise<User> {
+    const user = await this.usersPort.findByLoginId(id);
     if (!user) {
       throw new UserNotFoundError(`user ${id.value} not found.`);
     }
@@ -33,11 +33,42 @@ export class UsersUsecase {
   }
 }
 
-export function getUsecases(): { usersUsecase: UsersUsecase } {
+export class CandidatesUsecase {
+  @inject(CandidatesPort)
+  candidatesPort: CandidatesPort;
+
+  async create(id: CandidateId, recommenderId: LoginId, recommend: RecommendMessage): Promise<void> {
+    return this.candidatesPort.create(id, recommenderId, recommend);
+  }
+
+  async findById(id: CandidateId): Promise<Candidate> {
+    return this.candidatesPort.findById(id);
+  }
+
+  async list(): Promise<Candidates> {
+    return this.candidatesPort.list();
+  }
+}
+
+function createUsecases() {
   register(new Database("./data.db")).as(Database);
   register(new UsersGateway()).as(UsersPort);
   register(new UsersDriver()).as(UsersDriver);
+  register(new RecommendsDriver()).as(RecommendsDriver);
+  register(new CandidatesGateway()).as(CandidatesPort);
   return {
-    usersUsecase: new UsersUsecase()
-  };
+    usersUsecase: new UsersUsecase(),
+    candidatesUsecase: new CandidatesUsecase(),
+  }
+}
+
+let usecases: {
+  usersUsecase: UsersUsecase,
+  candidatesUsecase: CandidatesUsecase,
+}
+
+export function getUsecases() {
+  return usecases
+    ? usecases
+    : usecases = createUsecases();
 }

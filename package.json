@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-decorators": "^7.7.4",
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
     "@types/jest": "^24.0.23",
@@ -18,7 +20,7 @@
     "jest-when": "^2.7.0",
     "next": "^9.1.4",
     "node-fetch": "^2.6.0",
-    "omusubi": "^0.0.3",
+    "omusubi": "^0.0.4",
     "prettier": "^1.19.1",
     "react": "^16.8.6",
     "react-dom": "^16.12.0",
@@ -29,12 +31,33 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "start": "next build && next start -p 80",
+    "build": "next build",
+    "start": "next start -p 80",
     "dev": "next dev -p 80",
     "test": "jest",
-    "setup": "ts-node --project tools/tsconfig.json tools/setup.ts"
+    "setup": "ts-node --project tools/tsconfig.json tools/setup.ts",
+    "lint": "prettier --write \"./**/*.{ts,tsx}\""
   },
   "jest": {
     "preset": "ts-jest"
+  },
+  "babel": {
+    "presets": [
+      "next/babel"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
   }
 }

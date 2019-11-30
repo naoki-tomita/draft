@@ -1,13 +1,49 @@
-import Button from '@material-ui/core/Button';
-
 import { NextPage } from "next";
-import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
+import { Box, TextField, Button } from "@material-ui/core";
+import { useState } from "react";
+import fetch from "node-fetch";
+import { postCandidates } from "../api/Client";
 
-const Index: NextPage = () => {
+interface State {
+  id: string;
+  recommend: string;
+}
+
+const IndexPage: NextPage = () => {
+  const [state, setState] = useState<State>({ id: "", recommend: "" });
+  const { id, recommend } = state;
+
+  async function create() {
+    await postCandidates(parseInt(id, 10), recommend);
+    setState({ id: "", recommend: "" });
+  }
+
   return (
-    <div>body</div>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+      <Box marginTop="12px" width="250px">
+        <TextField
+          onChange={e => setState({ ...state, id: e.target.value })}
+          id="outlined-basic"
+          label="おすすめする人のID"
+          variant="outlined"
+          value={id}
+          fullWidth />
+      </Box>
+      <Box marginTop="12px" width="250px">
+        <TextField
+          onChange={e => setState({ ...state, recommend: e.target.value })}
+          id="outlined-basic"
+          label="おすすめする理由"
+          variant="outlined"
+          value={recommend}
+          multiline
+          fullWidth />
+      </Box>
+      <Box marginTop="12px">
+        <Button onClick={() => create()} >Create</Button>
+      </Box>
+    </div>
   );
 }
 
-export default Index;
+export default IndexPage;
