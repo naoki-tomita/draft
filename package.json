@@ -33,7 +33,7 @@
   "scripts": {
     "build": "next build",
     "local": "next start",
-    "start": "next build && next start -p $PORT",
+    "start": "next start -p $PORT",
     "dev": "next dev -p 80",
     "test": "jest",
     "setup": "ts-node --project tools/tsconfig.json tools/setup.ts",
