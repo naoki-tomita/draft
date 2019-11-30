@@ -45,5 +45,5 @@ export function postCandidates(candidateId: number, recommend: string) {
 
 export function origin(context?: IncomingMessage) {
   return context ?
-    "http://localhost:80" : location.origin;
+    `http://localhost:${process.env.PORT || 80}` : location.origin;
 }
