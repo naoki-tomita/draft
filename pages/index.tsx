@@ -20,7 +20,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-      <Box marginTop="12px" width="250px">
+      <div style={{ marginTop: "12px", width: 250 }}>
         <TextField
           onChange={e => setState({ ...state, id: e.target.value })}
           id="outlined-basic"
@@ -28,8 +28,8 @@ const IndexPage: NextPage = () => {
           variant="outlined"
           value={id}
           fullWidth />
-      </Box>
-      <Box marginTop="12px" width="250px">
+      </div>
+      <div style={{ marginTop: "12px", width: 250 }}>
         <TextField
           onChange={e => setState({ ...state, recommend: e.target.value })}
           id="outlined-basic"
@@ -38,10 +38,10 @@ const IndexPage: NextPage = () => {
           value={recommend}
           multiline
           fullWidth />
-      </Box>
-      <Box marginTop="12px">
+      </div>
+      <div style={{ marginTop: "12px" }}>
         <Button onClick={() => create()} >Create</Button>
-      </Box>
+      </div>
     </div>
   );
 }
