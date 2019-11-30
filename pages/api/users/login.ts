@@ -20,7 +20,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     res
       .writeHead(200, {
         "content-type": "application/json",
-        "set-cookie": `loginId=${user.loginId.value}; domain=localhost; path=/;`
+        "set-cookie": `loginId=${user.loginId.value}; path=/;`
       }).end();
   } catch (e) {
     console.error(e);
