@@ -17,7 +17,7 @@ async function main() {
       .column("recommend").type("TEXT")
       .build()
   );
-  await db.exec("DELETE FROM candidates");
+  await db.exec("DELETE FROM recommends");
   await db.exec("VACUUM");
 }
 main();

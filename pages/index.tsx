@@ -1,7 +1,6 @@
 import { NextPage } from "next";
-import { Box, TextField, Button } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import { useState } from "react";
-import fetch from "node-fetch";
 import { postCandidates } from "../api/Client";
 
 interface State {

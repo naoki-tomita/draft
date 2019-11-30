@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { CandidatesComponents } from "../../Components/Candidates";
 import { Candidate } from "../../Components/Candidates/Candidate";
-import fetch from "node-fetch";
 import { origin, fetchCandidates } from "../../api/Client";
 
 interface Props {

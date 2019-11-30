@@ -33,7 +33,7 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "next build",
+    "build": "next build && yarn setup",
     "local": "next start",
     "start": "next start -p $PORT",
     "dev": "next dev -p 80",

@@ -1,7 +1,6 @@
 import { NextPage } from "next";
-import { TextField, Button, Box, Typography } from "@material-ui/core";
+import { TextField, Button, Typography } from "@material-ui/core";
 import { useState } from "react";
-import fetch from "node-fetch";
 import { execLogin, execCreate } from "../../api/Client";
 
 interface State {
@@ -40,15 +39,16 @@ const LoginPage: NextPage = () => {
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
       {failedToLogin && <div><Typography color="error">Failed to Login.</Typography></div>}
       {alreadyExist && <div><Typography color="error">User already exist.</Typography></div>}
-      <Box marginBottom="8px"/>
-      <TextField
-        onChange={e => setState({ ...state, loginId: e.target.value })}
-        onKeyPress={e => e.key === "Enter" && login()}
-        id="outlined-basic" label="Outlined" variant="outlined" />
-      <Box marginBottom="8px"/>
-      <div>
-      <Button disabled={logining} onClick={() => login()}>Login</Button>
-      <Button style={{ marginLeft: "8px" }} onClick={() => create()}>Create</Button>
+      <div style={{ marginTop: "8px", width: 250 }}>
+        <TextField
+          onChange={e => setState({ ...state, loginId: e.target.value })}
+          onKeyPress={e => e.key === "Enter" && login()}
+          id="outlined-basic" label="Outlined" variant="outlined"
+          fullWidth />
+      </div>
+      <div style={{ marginTop: "8px" }}>
+        <Button disabled={logining} onClick={() => login()}>Login</Button>
+        <Button style={{ marginLeft: "8px" }} onClick={() => create()}>Create</Button>
       </div>
     </div>
   );

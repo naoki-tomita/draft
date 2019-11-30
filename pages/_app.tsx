@@ -33,6 +33,7 @@ export default class MyApp extends App<Props, {}, State> {
   static async getInitialProps({ Component, ctx }: AppContext) {
     const { req } = ctx;
     const { cookie } = req.headers;
+    console.log(cookie);
     const user = await identify(origin(req), cookie);
     if (Component.getInitialProps) {
       return { pageProps: await Component.getInitialProps(ctx), user };
