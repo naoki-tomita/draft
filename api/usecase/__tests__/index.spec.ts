@@ -5,9 +5,6 @@ import { when } from "jest-when";
 import {
   LoginId,
   CandidateId,
-  UserId,
-  User,
-  Recommend,
   RecommendMessage
 } from "../../domain";
 

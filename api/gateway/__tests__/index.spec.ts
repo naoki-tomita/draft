@@ -2,7 +2,7 @@ import { register } from "omusubi";
 import { when } from "jest-when";
 
 import { UsersGateway, CandidatesGateway } from "..";
-import { UsersDriver, RecommendsDriver, RecommendEntity } from "../../driver";
+import { UsersDriver, RecommendsDriver, RecommendEntity, UserEntity } from "../../driver";
 import {
   Users,
   User,
@@ -55,7 +55,7 @@ describe("UsersGateway", () => {
 
       when(findByLoginId)
         .calledWith("loginId")
-        .mockReturnValueOnce({ id: 1, loginId: "loginId" });
+        .mockReturnValueOnce({ id: 1, login_id: "loginId" });
 
       expect(await usersGateway.create(loginId)).toEqual(expected);
       when(create).expectCalledWith("loginId");
@@ -71,7 +71,7 @@ describe("UsersGateway", () => {
 
       when(findByLoginId)
         .calledWith("id")
-        .mockReturnValue({ id: 1, loginId: "id" });
+        .mockReturnValue({ id: 1, login_id: "id" });
 
       expect(await usersGateway.findByLoginId(id)).toEqual(expected);
       when(findByLoginId).expectCalledWith("id");
@@ -105,13 +105,13 @@ describe("RecommendsGateway", () => {
   describe("list", () => {
     it("should return list", async () => {
       const recommendEntities: RecommendEntity[] = [
-        { id: 0, candidateId: 0, recommenderId: 10, recommend: "message10" },
-        { id: 1, candidateId: 0, recommenderId: 20, recommend: "message20" },
-        { id: 2, candidateId: 1, recommenderId: 30, recommend: "message30" }
+        { id: 0, candidate_id: 0, recommender_id: 10, recommend: "message10" },
+        { id: 1, candidate_id: 0, recommender_id: 20, recommend: "message20" },
+        { id: 2, candidate_id: 1, recommender_id: 30, recommend: "message30" }
       ];
-      const user10Entity = { id: 10, loginId: "foo" };
-      const user20Entity = { id: 20, loginId: "bar" };
-      const user30Entity = { id: 30, loginId: "hoge" };
+      const user10Entity: UserEntity = { id: 10, login_id: "foo" };
+      const user20Entity: UserEntity  = { id: 20, login_id: "bar" };
+      const user30Entity: UserEntity  = { id: 30, login_id: "hoge" };
       const findAll = (recommendsDriver.findAll = jest.fn());
       const findById = (usersDriver.findById = jest.fn());
 

@@ -18,19 +18,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
     const candidates = await candidatesUsecase.list();
-    res
-      .writeHead(200, { "content-type": "application/json" })
-      .end(
-        JSON.stringify(
-          candidates.map(({ id, recommends }) => ({
-            id: id.value,
-            recommends: recommends.map(({ user, message }) => ({
-              loginId: user.loginId.value,
-              recommend: message.value
-            }))
+    res.writeHead(200, { "content-type": "application/json" }).end(
+      JSON.stringify(
+        candidates.map(({ id, recommends }) => ({
+          id: id.value,
+          recommends: recommends.map(({ user, message }) => ({
+            loginId: user.loginId.value,
+            recommend: message.value
           }))
-        )
-      );
+        }))
+      )
+    );
   } catch (e) {
     console.error(e);
     res

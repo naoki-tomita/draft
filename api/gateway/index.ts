@@ -45,13 +45,13 @@ export class CandidatesGateway extends CandidatesPort {
   async list(): Promise<Candidates> {
     const recommendsEntity = await this.recommendsDriver.findAll();
     const usersEntity = await Promise.all(
-      recommendsEntity.map(it => this.usersDriver.findById(it.recommenderId))
+      recommendsEntity.map(it => this.usersDriver.findById(it.recommender_id))
     );
     const users = new Users(usersEntity.map(User.from));
     const recommends = recommendsEntity.map(it => ({
-      candidateId: it.candidateId,
+      candidateId: it.candidate_id,
       recommend: new Recommend(
-        users.findBy(new UserId(it.recommenderId)),
+        users.findBy(new UserId(it.recommender_id)),
         new RecommendMessage(it.recommend)
       )
     }));

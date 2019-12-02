@@ -4,9 +4,10 @@ import { inject } from "omusubi";
 import { select, insertInto } from "sql-query-factory";
 
 export abstract class Database {
-  abstract exec(sql: string): Promise<void>;
-  abstract all<T>(sql: string): Promise<T[]>;
-  abstract get<T>(sql: string): Promise<T | null>;
+  abstract async exec(sql: string): Promise<void>;
+  abstract async all<T>(sql: string): Promise<T[]>;
+  abstract async get<T>(sql: string): Promise<T | null>;
+  abstract async dispose(): Promise<void>;
 }
 
 // export class SqliteDatabase implements Database {
@@ -52,11 +53,15 @@ export class PostgresDatabase implements Database {
     const result = await this.db.query<T>(sql);
     return result.rows[0] || null;
   }
+
+  async dispose() {
+    await this.db.end();
+  }
 }
 
 export interface UserEntity {
   id: number;
-  loginId: string;
+  login_id: string;
 }
 
 export class UsersDriver {
@@ -73,7 +78,7 @@ export class UsersDriver {
   async create(id: string) {
     await this.db.exec(
       insertInto<UserEntity>("users")
-        .keys("loginId")
+        .keys("login_id")
         .values(id)
         .build()
     );
@@ -83,7 +88,7 @@ export class UsersDriver {
     return await this.db.get(
       select("*")
         .from<UserEntity>("users")
-        .where("loginId")
+        .where("login_id")
         .equal(loginId)
         .build()
     );
@@ -102,8 +107,8 @@ export class UsersDriver {
 
 export interface RecommendEntity {
   id: number;
-  candidateId: number;
-  recommenderId: number;
+  candidate_id: number;
+  recommender_id: number;
   recommend: string;
 }
 
@@ -121,7 +126,7 @@ export class RecommendsDriver {
   async create(candidateId: number, recommenderId: number, recommend: string) {
     await this.db.exec(
       insertInto<RecommendEntity>("recommends")
-        .keys("candidateId", "recommenderId", "recommend")
+        .keys("candidate_id", "recommender_id", "recommend")
         .values(candidateId, recommenderId, recommend)
         .build()
     );
@@ -131,7 +136,7 @@ export class RecommendsDriver {
     return await this.db.get(
       select("*")
         .from<RecommendEntity>("recommends")
-        .where("candidateId")
+        .where("candidate_id")
         .equal(candidateId)
         .build()
     );

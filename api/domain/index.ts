@@ -45,7 +45,7 @@ export class User {
   }
 
   static from(user: UserEntity): User {
-    return new User(new UserId(user.id), new LoginId(user.loginId));
+    return new User(new UserId(user.id), new LoginId(user.login_id));
   }
 }
 
