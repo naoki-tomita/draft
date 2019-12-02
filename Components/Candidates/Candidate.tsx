@@ -1,5 +1,14 @@
 import React, { FC } from "react";
-import { Card, CardContent, Typography, CardActions, Button, List, ListItem, ListItemText } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  Button,
+  List,
+  ListItem,
+  ListItemText
+} from "@material-ui/core";
 
 export interface Candidate {
   id: string;
@@ -30,7 +39,9 @@ export const CandidateComponent: FC<Props> = ({ candidate }) => {
           </List>
         </CardContent>
         <CardActions>
-          <Button href={`/candidates/${candidate.id}`} size="small">みる</Button>
+          <Button href={`/candidates/${candidate.id}`} size="small">
+            みる
+          </Button>
         </CardActions>
       </Card>
     </li>

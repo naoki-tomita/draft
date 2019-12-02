@@ -8,24 +8,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST":
       return post(req, res);
     default:
-      res.writeHead(500, {"content-type": "application/json"}).end();
+      res.writeHead(500, { "content-type": "application/json" }).end();
       return;
   }
-}
+};
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { body: { loginId } } = req;
+    const {
+      body: { loginId }
+    } = req;
     const user = await usersUsecase.findByLoginId(new LoginId(loginId));
     res
       .writeHead(200, {
         "content-type": "application/json",
         "set-cookie": `loginId=${user.loginId.value}; path=/;`
-      }).end();
+      })
+      .end();
   } catch (e) {
     console.error(e);
     res
-      .writeHead(500, {"content-type": "application/json"})
+      .writeHead(500, { "content-type": "application/json" })
       .end((e as Error).stack);
   }
 }

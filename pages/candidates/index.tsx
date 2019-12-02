@@ -8,10 +8,8 @@ interface Props {
 }
 
 const CandidatesPage: NextPage<Props> = ({ candidates }) => {
-  return (
-    <CandidatesComponents candidates={candidates}/>
-  );
-}
+  return <CandidatesComponents candidates={candidates} />;
+};
 
 CandidatesPage.getInitialProps = async ({ req }) => {
   const result = await fetchCandidates(origin(req));
@@ -20,6 +18,6 @@ CandidatesPage.getInitialProps = async ({ req }) => {
     return { candidates };
   }
   return { candidates: [] };
-}
+};
 
 export default CandidatesPage;

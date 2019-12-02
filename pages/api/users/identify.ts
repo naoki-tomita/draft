@@ -8,10 +8,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET":
       return get(req, res);
     default:
-      res.writeHead(500, {"content-type": "application/json"}).end();
+      res.writeHead(500, { "content-type": "application/json" }).end();
       return;
   }
-}
+};
 
 export function parse(cookie: string = ""): { key: string; value: string }[] {
   return cookie
@@ -27,12 +27,12 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     const { cookies } = req;
     const user = await usersUsecase.findByLoginId(new LoginId(cookies.loginId));
     res
-      .writeHead(200, {"content-type": "application/json"})
-      .end(JSON.stringify(({ loginId: user.loginId.value })));
+      .writeHead(200, { "content-type": "application/json" })
+      .end(JSON.stringify({ loginId: user.loginId.value }));
   } catch (e) {
     console.error(e);
     res
-      .writeHead(500, {"content-type": "application/json"})
+      .writeHead(500, { "content-type": "application/json" })
       .end((e as Error).stack);
   }
 }

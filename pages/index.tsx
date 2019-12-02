@@ -18,7 +18,14 @@ const IndexPage: NextPage = () => {
   }
 
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column"
+      }}
+    >
       <div style={{ marginTop: "12px", width: 250 }}>
         <TextField
           onChange={e => setState({ ...state, id: e.target.value })}
@@ -26,7 +33,8 @@ const IndexPage: NextPage = () => {
           label="おすすめする人のID"
           variant="outlined"
           value={id}
-          fullWidth />
+          fullWidth
+        />
       </div>
       <div style={{ marginTop: "12px", width: 250 }}>
         <TextField
@@ -36,13 +44,14 @@ const IndexPage: NextPage = () => {
           variant="outlined"
           value={recommend}
           multiline
-          fullWidth />
+          fullWidth
+        />
       </div>
       <div style={{ marginTop: "12px" }}>
-        <Button onClick={() => create()} >Create</Button>
+        <Button onClick={() => create()}>Create</Button>
       </div>
     </div>
   );
-}
+};
 
 export default IndexPage;

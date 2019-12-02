@@ -1,4 +1,13 @@
-import { Users, User, LoginId, CandidateId, Recommends, RecommendMessage, Candidates, Candidate } from "../domain";
+import {
+  Users,
+  User,
+  LoginId,
+  CandidateId,
+  Recommends,
+  RecommendMessage,
+  Candidates,
+  Candidate
+} from "../domain";
 
 export abstract class UsersPort {
   abstract async list(): Promise<Users>;
@@ -8,7 +17,11 @@ export abstract class UsersPort {
 
 export abstract class CandidatesPort {
   abstract async list(): Promise<Candidates>;
-  abstract async create(id: CandidateId, recommenderId: LoginId, message: RecommendMessage): Promise<void>;
+  abstract async create(
+    id: CandidateId,
+    recommenderId: LoginId,
+    message: RecommendMessage
+  ): Promise<void>;
   abstract async findById(id: CandidateId): Promise<Candidate>;
 }
 

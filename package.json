@@ -6,14 +6,16 @@
   "dependencies": {
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
+    "@types/pg": "^7.11.2",
     "@zeit/next-css": "^1.0.1",
     "next": "^9.1.4",
-    "sqlite3": "^4.0.9",
     "node-fetch": "^2.6.0",
     "omusubi": "^0.0.4",
+    "pg": "^7.14.0",
     "react": "^16.8.6",
     "react-dom": "^16.12.0",
-    "sql-query-factory": "^1.0.10"
+    "sql-query-factory": "^1.0.10",
+    "sqlite3": "^4.0.9"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -39,7 +41,8 @@
     "dev": "next dev -p 80",
     "test": "jest",
     "setup": "ts-node --project tools/tsconfig.json tools/setup.ts",
-    "lint": "prettier --write \"./**/*.{ts,tsx}\""
+    "lint": "prettier --write \"./**/*.{ts,tsx}\"",
+    "db": "docker run --name draft-db --rm -p 5432:5432 -e POSTGRES_USER=draft -e POSTGRES_PASSWORD=draft -d postgres:alpine"
   },
   "jest": {
     "preset": "ts-jest"

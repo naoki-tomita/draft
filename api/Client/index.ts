@@ -2,23 +2,19 @@ import fetch from "node-fetch";
 import { IncomingMessage } from "http";
 
 export function execCreate(loginId: string) {
-  return fetch(
-    "/api/users", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ loginId })
-    }
-  )
+  return fetch("/api/users", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ loginId })
+  });
 }
 
 export function execLogin(loginId: string) {
-  return fetch(
-    "/api/users/login", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ loginId })
-    }
-  );
+  return fetch("/api/users/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ loginId })
+  });
 }
 
 export function execLogout() {
@@ -44,6 +40,7 @@ export function postCandidates(candidateId: number, recommend: string) {
 }
 
 export function origin(context?: IncomingMessage) {
-  return context ?
-    `http://localhost:${process.env.PORT || 80}` : location.origin;
+  return context
+    ? `http://localhost:${process.env.PORT || 80}`
+    : location.origin;
 }

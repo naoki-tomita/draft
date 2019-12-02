@@ -1,8 +1,26 @@
 import { inject, register } from "omusubi";
-import { UsersPort, UserNotFoundError, UserAlreadyExistError, CandidatesPort } from "../port";
-import { User, LoginId, Users, CandidateId, RecommendMessage, Recommends, Candidate, Candidates } from "../domain";
+import {
+  UsersPort,
+  UserNotFoundError,
+  UserAlreadyExistError,
+  CandidatesPort
+} from "../port";
+import {
+  User,
+  LoginId,
+  Users,
+  CandidateId,
+  RecommendMessage,
+  Candidate,
+  Candidates
+} from "../domain";
 import { UsersGateway, CandidatesGateway } from "../gateway";
-import { UsersDriver, Database, RecommendsDriver } from "../driver";
+import {
+  UsersDriver,
+  Database,
+  RecommendsDriver,
+  PostgresDatabase
+} from "../driver";
 
 export class UsersUsecase {
   @inject(UsersPort)
@@ -37,7 +55,11 @@ export class CandidatesUsecase {
   @inject(CandidatesPort)
   candidatesPort: CandidatesPort;
 
-  async create(id: CandidateId, recommenderId: LoginId, recommend: RecommendMessage): Promise<void> {
+  async create(
+    id: CandidateId,
+    recommenderId: LoginId,
+    recommend: RecommendMessage
+  ): Promise<void> {
     return this.candidatesPort.create(id, recommenderId, recommend);
   }
 
@@ -51,24 +73,22 @@ export class CandidatesUsecase {
 }
 
 function createUsecases() {
-  register(new Database("./data.db")).as(Database);
+  register(new PostgresDatabase(process.env.DATABASE_URL)).as(Database);
   register(new UsersGateway()).as(UsersPort);
   register(new UsersDriver()).as(UsersDriver);
   register(new RecommendsDriver()).as(RecommendsDriver);
   register(new CandidatesGateway()).as(CandidatesPort);
   return {
     usersUsecase: new UsersUsecase(),
-    candidatesUsecase: new CandidatesUsecase(),
-  }
+    candidatesUsecase: new CandidatesUsecase()
+  };
 }
 
 let usecases: {
-  usersUsecase: UsersUsecase,
-  candidatesUsecase: CandidatesUsecase,
-}
+  usersUsecase: UsersUsecase;
+  candidatesUsecase: CandidatesUsecase;
+};
 
 export function getUsecases() {
-  return usecases
-    ? usecases
-    : usecases = createUsecases();
+  return usecases ? usecases : (usecases = createUsecases());
 }

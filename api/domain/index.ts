@@ -6,11 +6,17 @@ export class FCC<T> {
     this.values = values;
   }
 
-  map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] {
+  map<U>(
+    callbackfn: (value: T, index: number, array: T[]) => U,
+    thisArg?: any
+  ): U[] {
     return this.values.map(callbackfn, thisArg);
   }
 
-  find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined {
+  find(
+    predicate: (value: T, index: number, obj: T[]) => unknown,
+    thisArg?: any
+  ): T | undefined {
     return this.values.find(predicate, thisArg);
   }
 }
@@ -39,10 +45,7 @@ export class User {
   }
 
   static from(user: UserEntity): User {
-    return new User(
-      new UserId(user.id),
-      new LoginId(user.loginId)
-    );
+    return new User(new UserId(user.id), new LoginId(user.loginId));
   }
 }
 
@@ -68,9 +71,7 @@ export class Recommend {
   }
 }
 
-export class Recommends extends FCC<Recommend> {
-
-}
+export class Recommends extends FCC<Recommend> {}
 
 export class CandidateId {
   value: number;
