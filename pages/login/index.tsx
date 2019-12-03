@@ -64,7 +64,7 @@ const LoginPage: NextPage = () => {
           onChange={e => setState({ ...state, loginId: e.target.value })}
           onKeyPress={e => e.key === "Enter" && login()}
           id="outlined-basic"
-          label="Outlined"
+          label="Login name"
           variant="outlined"
           fullWidth
         />

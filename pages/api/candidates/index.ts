@@ -1,6 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getUsecases } from "../../../api/usecase";
-import { LoginId, CandidateId, RecommendMessage } from "../../../api/domain";
+import {
+  LoginId,
+  CandidateId,
+  RecommendMessage,
+  Good
+} from "../../../api/domain";
 
 const { candidatesUsecase } = getUsecases();
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -22,9 +27,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       JSON.stringify(
         candidates.map(({ id, recommends }) => ({
           id: id.value,
-          recommends: recommends.map(({ user, message }) => ({
+          recommends: recommends.map(({ user, message, good }) => ({
             loginId: user.loginId.value,
-            recommend: message.value
+            recommend: message.value,
+            good: good.value
           }))
         }))
       )
@@ -40,13 +46,14 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
     const {
-      body: { candidateId, recommend },
+      body: { candidateId, recommend, good },
       cookies: { loginId }
     } = req;
     await candidatesUsecase.create(
       new CandidateId(candidateId),
       new LoginId(loginId),
-      new RecommendMessage(recommend)
+      new RecommendMessage(recommend),
+      new Good(good)
     );
     res.writeHead(201, { "content-type": "application/json" }).end();
   } catch (e) {

@@ -65,9 +65,11 @@ export class RecommendMessage {
 export class Recommend {
   user: User;
   message: RecommendMessage;
-  constructor(user: User, message: RecommendMessage) {
+  good: Good;
+  constructor(user: User, message: RecommendMessage, good: Good) {
     this.user = user;
     this.message = message;
+    this.good = good;
   }
 }
 
@@ -90,3 +92,11 @@ export class Candidate {
 }
 
 export class Candidates extends FCC<Candidate> {}
+
+export class Good {
+  value: boolean;
+
+  constructor(good: boolean) {
+    this.value = good;
+  }
+}

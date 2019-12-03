@@ -6,7 +6,8 @@ import {
   Recommends,
   RecommendMessage,
   Candidates,
-  Candidate
+  Candidate,
+  Good
 } from "../domain";
 
 export abstract class UsersPort {
@@ -20,9 +21,10 @@ export abstract class CandidatesPort {
   abstract async create(
     id: CandidateId,
     recommenderId: LoginId,
-    message: RecommendMessage
+    message: RecommendMessage,
+    good: Good
   ): Promise<void>;
-  abstract async findById(id: CandidateId): Promise<Candidate>;
+  abstract async findByCandidateId(id: CandidateId): Promise<Candidate | null>;
 }
 
 export class UserNotFoundError extends Error {}

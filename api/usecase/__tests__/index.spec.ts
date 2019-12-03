@@ -2,11 +2,7 @@ import { UsersUsecase, CandidatesUsecase } from "../";
 import { register } from "omusubi";
 import { UsersPort, CandidatesPort } from "../../port";
 import { when } from "jest-when";
-import {
-  LoginId,
-  CandidateId,
-  RecommendMessage
-} from "../../domain";
+import { LoginId, CandidateId, RecommendMessage, Good } from "../../domain";
 
 describe("UsersUsecase", () => {
   let usersPort: UsersPort;
@@ -107,7 +103,7 @@ describe("RecommendsUsecase", () => {
   });
   describe("findById", () => {
     it("should returns User.", async () => {
-      const findById = (recommendsPort.findById = jest.fn());
+      const findById = (recommendsPort.findByCandidateId = jest.fn());
       const recommends = jest.fn();
       const id = new CandidateId(123);
 
@@ -125,9 +121,10 @@ describe("RecommendsUsecase", () => {
       const id = new CandidateId(99);
       const loginId = new LoginId("id");
       const recommend = new RecommendMessage("osusume");
+      const good = new Good(true);
 
-      await recommendsUsecase.create(id, loginId, recommend);
-      when(create).expectCalledWith(id, loginId, recommend);
+      await recommendsUsecase.create(id, loginId, recommend, good);
+      when(create).expectCalledWith(id, loginId, recommend, good);
     });
   });
 });

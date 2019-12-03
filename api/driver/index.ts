@@ -110,6 +110,7 @@ export interface RecommendEntity {
   candidate_id: number;
   recommender_id: number;
   recommend: string;
+  good: boolean;
 }
 
 export class RecommendsDriver {
@@ -123,17 +124,22 @@ export class RecommendsDriver {
     );
   }
 
-  async create(candidateId: number, recommenderId: number, recommend: string) {
+  async create(
+    candidateId: number,
+    recommenderId: number,
+    recommend: string,
+    good: boolean
+  ) {
     await this.db.exec(
       insertInto<RecommendEntity>("recommends")
-        .keys("candidate_id", "recommender_id", "recommend")
-        .values(candidateId, recommenderId, recommend)
+        .keys("candidate_id", "recommender_id", "recommend", "good")
+        .values(candidateId, recommenderId, recommend, good)
         .build()
     );
   }
 
-  async findById(candidateId: string): Promise<RecommendEntity | null> {
-    return await this.db.get(
+  async findByCandiidateId(candidateId: number): Promise<RecommendEntity[]> {
+    return await this.db.all(
       select("*")
         .from<RecommendEntity>("recommends")
         .where("candidate_id")

@@ -18,12 +18,12 @@ export const CandidatesComponents: FC<Props> = ({ candidates }) => {
       {candidates.map(user => (
         <CandidateComponent key={user.id} candidate={user} />
       ))}
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
-      <li style={{ listStyle: "none", margin: 0, width: 200 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
+      <li style={{ listStyle: "none", margin: 5, minWidth: 230 }}></li>
     </ul>
   );
 };

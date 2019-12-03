@@ -2,7 +2,12 @@ import { register } from "omusubi";
 import { when } from "jest-when";
 
 import { UsersGateway, CandidatesGateway } from "..";
-import { UsersDriver, RecommendsDriver, RecommendEntity, UserEntity } from "../../driver";
+import {
+  UsersDriver,
+  RecommendsDriver,
+  RecommendEntity,
+  UserEntity
+} from "../../driver";
 import {
   Users,
   User,
@@ -13,7 +18,8 @@ import {
   CandidateId,
   Recommends,
   Recommend,
-  RecommendMessage
+  RecommendMessage,
+  Good
 } from "../../domain";
 
 describe("UsersGateway", () => {
@@ -105,13 +111,31 @@ describe("RecommendsGateway", () => {
   describe("list", () => {
     it("should return list", async () => {
       const recommendEntities: RecommendEntity[] = [
-        { id: 0, candidate_id: 0, recommender_id: 10, recommend: "message10" },
-        { id: 1, candidate_id: 0, recommender_id: 20, recommend: "message20" },
-        { id: 2, candidate_id: 1, recommender_id: 30, recommend: "message30" }
+        {
+          id: 0,
+          candidate_id: 0,
+          recommender_id: 10,
+          recommend: "message10",
+          good: false
+        },
+        {
+          id: 1,
+          candidate_id: 0,
+          recommender_id: 20,
+          recommend: "message20",
+          good: true
+        },
+        {
+          id: 2,
+          candidate_id: 1,
+          recommender_id: 30,
+          recommend: "message30",
+          good: false
+        }
       ];
       const user10Entity: UserEntity = { id: 10, login_id: "foo" };
-      const user20Entity: UserEntity  = { id: 20, login_id: "bar" };
-      const user30Entity: UserEntity  = { id: 30, login_id: "hoge" };
+      const user20Entity: UserEntity = { id: 20, login_id: "bar" };
+      const user30Entity: UserEntity = { id: 30, login_id: "hoge" };
       const findAll = (recommendsDriver.findAll = jest.fn());
       const findById = (usersDriver.findById = jest.fn());
 
@@ -134,11 +158,13 @@ describe("RecommendsGateway", () => {
           new Recommends([
             new Recommend(
               new User(new UserId(10), new LoginId("foo")),
-              new RecommendMessage("message10")
+              new RecommendMessage("message10"),
+              new Good(false)
             ),
             new Recommend(
               new User(new UserId(20), new LoginId("bar")),
-              new RecommendMessage("message20")
+              new RecommendMessage("message20"),
+              new Good(true)
             )
           ])
         ),
@@ -147,7 +173,8 @@ describe("RecommendsGateway", () => {
           new Recommends([
             new Recommend(
               new User(new UserId(30), new LoginId("hoge")),
-              new RecommendMessage("message30")
+              new RecommendMessage("message30"),
+              new Good(false)
             )
           ])
         )
@@ -162,18 +189,75 @@ describe("RecommendsGateway", () => {
       const id = new CandidateId(0);
       const recommenderId = new LoginId("foo");
       const message = new RecommendMessage("message");
+      const good = new Good(false);
       const findByLoginId = (usersDriver.findByLoginId = jest.fn());
       const create = (recommendsDriver.create = jest.fn());
 
       when(findByLoginId)
         .calledWith(recommenderId.value)
         .mockReturnValueOnce({ id: 10 });
-      await candidatesGateway.create(id, recommenderId, message);
+      await candidatesGateway.create(id, recommenderId, message, good);
       when(create).expectCalledWith(
         id.value,
         recommenderId.value,
-        message.value
+        message.value,
+        good.value
       );
+    });
+  });
+
+  describe("findById", () => {
+    it("should return candidate", async () => {
+      const recommendEntities: RecommendEntity[] = [
+        {
+          id: 0,
+          candidate_id: 0,
+          recommender_id: 10,
+          recommend: "message10",
+          good: false
+        },
+        {
+          id: 1,
+          candidate_id: 0,
+          recommender_id: 20,
+          recommend: "message20",
+          good: true
+        }
+      ];
+      const user10Entity: UserEntity = { id: 10, login_id: "foo" };
+      const user20Entity: UserEntity = { id: 20, login_id: "bar" };
+      const findByCandidateId = (recommendsDriver.findByCandiidateId = jest.fn());
+      const findByUserId = (usersDriver.findById = jest.fn());
+
+      when(findByCandidateId)
+        .calledWith(0)
+        .mockReturnValueOnce(recommendEntities);
+      when(findByUserId)
+        .calledWith(10)
+        .mockReturnValueOnce(user10Entity);
+      when(findByUserId)
+        .calledWith(20)
+        .mockReturnValueOnce(user20Entity);
+
+      const expected = new Candidate(
+        new CandidateId(0),
+        new Recommends([
+          new Recommend(
+            new User(new UserId(10), new LoginId("foo")),
+            new RecommendMessage("message10"),
+            new Good(false)
+          ),
+          new Recommend(
+            new User(new UserId(20), new LoginId("bar")),
+            new RecommendMessage("message20"),
+            new Good(true)
+          )
+        ])
+      );
+
+      expect(
+        await candidatesGateway.findByCandidateId(new CandidateId(0))
+      ).toEqual(expected);
     });
   });
 });

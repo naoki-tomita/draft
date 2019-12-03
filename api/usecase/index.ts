@@ -12,7 +12,8 @@ import {
   CandidateId,
   RecommendMessage,
   Candidate,
-  Candidates
+  Candidates,
+  Good
 } from "../domain";
 import { UsersGateway, CandidatesGateway } from "../gateway";
 import {
@@ -58,13 +59,14 @@ export class CandidatesUsecase {
   async create(
     id: CandidateId,
     recommenderId: LoginId,
-    recommend: RecommendMessage
+    recommend: RecommendMessage,
+    good: Good
   ): Promise<void> {
-    return this.candidatesPort.create(id, recommenderId, recommend);
+    return this.candidatesPort.create(id, recommenderId, recommend, good);
   }
 
-  async findById(id: CandidateId): Promise<Candidate> {
-    return this.candidatesPort.findById(id);
+  async findById(id: CandidateId): Promise<Candidate | null> {
+    return this.candidatesPort.findByCandidateId(id);
   }
 
   async list(): Promise<Candidates> {

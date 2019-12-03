@@ -1,4 +1,5 @@
 import App, { AppContext } from "next/app";
+import Router from "next/router";
 import "./_app.css";
 import {
   AppBar,
@@ -13,21 +14,18 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider
+  Breadcrumbs
 } from "@material-ui/core";
 import { Menu, People } from "@material-ui/icons";
 import { execIdentify, execLogout, origin } from "../api/Client";
+import Head from "next/head";
 
 interface Props {
   user: { loginId: string };
 }
 
-async function identify(origin: string, cookies: string) {
-  const result = await execIdentify(origin, cookies);
-  if (result.ok) {
-    return await result.json();
-  }
-  return null;
+function identify(origin: string, cookies: string) {
+  return execIdentify(origin, cookies);
 }
 
 async function logout() {
@@ -44,11 +42,26 @@ export default class MyApp extends App<Props, {}, State> {
     super(args[0], args[1]);
     this.state = { isOpen: false };
   }
+
+  componentDidMount() {
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }
+
   static async getInitialProps({ Component, ctx }: AppContext) {
-    const { req } = ctx;
+    const { req, res } = ctx;
     const { cookie } = req.headers;
-    console.log(cookie);
-    const user = await identify(origin(req), cookie);
+    const user = await identify(origin(), cookie);
+
+    if (!user && !req.url.includes("/login")) {
+      process.browser
+        ? Router.push("/login")
+        : res.writeHead(302, { Location: "/login" }).end();
+      return;
+    }
+
     if (Component.getInitialProps) {
       return { pageProps: await Component.getInitialProps(ctx), user };
     }
@@ -60,6 +73,9 @@ export default class MyApp extends App<Props, {}, State> {
 
     return (
       <>
+        <Head>
+          <title>転職ドラフト候補者を見る</title>
+        </Head>
         <AppBar position="static">
           <Toolbar>
             <IconButton
@@ -84,6 +100,11 @@ export default class MyApp extends App<Props, {}, State> {
             )}
           </Toolbar>
         </AppBar>
+        <Container>
+          <div style={{ marginTop: "16px" }}>
+            <Component {...pageProps} />
+          </div>
+        </Container>
         <Drawer
           open={this.state.isOpen}
           onClose={() => this.setState({ isOpen: false })}
@@ -97,11 +118,6 @@ export default class MyApp extends App<Props, {}, State> {
             </ListItem>
           </List>
         </Drawer>
-        <Container>
-          <div style={{ marginTop: "16px" }}>
-            <Component {...pageProps} />
-          </div>
-        </Container>
       </>
     );
   }

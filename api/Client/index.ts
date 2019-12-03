@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import { IncomingMessage } from "http";
 
 export function execCreate(loginId: string) {
   return fetch("/api/users", {
@@ -21,26 +20,67 @@ export function execLogout() {
   return fetch("/api/users/logout");
 }
 
-export function execIdentify(origin: string, cookies: string) {
-  return fetch(`${origin}/api/users/identify`, {
+export interface UserResponse {
+  loginId: string;
+}
+
+export async function execIdentify(
+  origin: string,
+  cookies: string
+): Promise<UserResponse | null> {
+  const result = await fetch(`${origin}/api/users/identify`, {
     headers: { cookie: cookies }
   });
+  if (result.ok) {
+    return await result.json();
+  }
+  return null;
 }
 
-export function fetchCandidates(origin: string) {
-  return fetch(`${origin}/api/candidates`);
+export interface CandidateResponse {
+  id: number;
+  recommends: Array<{
+    loginId: string;
+    recommend: string;
+    good: boolean;
+  }>;
 }
 
-export function postCandidates(candidateId: number, recommend: string) {
+export async function fetchCandidates(
+  origin: string
+): Promise<CandidateResponse[] | null> {
+  const result = await fetch(`${origin}/api/candidates`);
+  if (result.ok) {
+    return await result.json();
+  }
+  return [];
+}
+
+export function postCandidates(
+  candidateId: number,
+  recommend: string,
+  good: boolean
+) {
   return fetch("/api/candidates", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ candidateId, recommend })
+    body: JSON.stringify({ candidateId, recommend, good })
   });
 }
 
-export function origin(context?: IncomingMessage) {
-  return context
+export async function fetchCandidate(
+  origin: string,
+  candidateId: number
+): Promise<CandidateResponse | null> {
+  const result = await fetch(`${origin}/api/candidates/${candidateId}`);
+  if (result.ok) {
+    return await result.json();
+  }
+  return null;
+}
+
+export function origin() {
+  return !process.browser
     ? `http://localhost:${process.env.PORT || 80}`
     : location.origin;
 }
