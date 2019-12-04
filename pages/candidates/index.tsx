@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { CandidatesComponents } from "../../Components/Candidates";
 import { Candidate } from "../../Components/Candidates/Candidate";
-import { origin, fetchCandidates, execIdentify } from "../../api/Client";
+import { fetchCandidates, execIdentify } from "../../api/Client";
 import { Breadcrumbs, Link, Typography } from "@material-ui/core";
 
 interface Props {
@@ -26,8 +26,8 @@ const CandidatesPage: NextPage<Props> = ({ candidates }) => {
 
 CandidatesPage.getInitialProps = async ({ req }) => {
   const [user, candidates] = await Promise.all([
-    execIdentify(origin(), req.headers.cookie),
-    fetchCandidates(origin())
+    execIdentify(req.headers.cookie),
+    fetchCandidates()
   ]);
   return {
     candidates: candidates.map(it => ({

@@ -1,13 +1,10 @@
 import { NextPage } from "next";
-import {
-  TextField,
-  Button,
-  Typography,
-  Breadcrumbs,
-  Link
-} from "@material-ui/core";
+import Router from "next/router";
+import { TextField, Button, Typography, Breadcrumbs } from "@material-ui/core";
 import { useState } from "react";
-import { postCandidates } from "../api/Client";
+import { postCandidates, fetchCandidates, execIdentify } from "../api/Client";
+import { Candidate } from "../Components/Candidates/Candidate";
+import { CandidatesComponents } from "../Components/Candidates";
 
 interface State {
   id: string;

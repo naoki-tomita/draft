@@ -24,8 +24,8 @@ interface Props {
   user: { loginId: string };
 }
 
-function identify(origin: string, cookies: string) {
-  return execIdentify(origin, cookies);
+function identify(cookies: string) {
+  return execIdentify(cookies);
 }
 
 async function logout() {
@@ -53,7 +53,7 @@ export default class MyApp extends App<Props, {}, State> {
   static async getInitialProps({ Component, ctx }: AppContext) {
     const { req, res } = ctx;
     const { cookie } = req.headers;
-    const user = await identify(origin(), cookie);
+    const user = await identify(cookie);
 
     if (!user && !req.url.includes("/login")) {
       process.browser

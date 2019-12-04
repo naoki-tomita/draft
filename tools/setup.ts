@@ -4,12 +4,8 @@ import { UserEntity, RecommendEntity, PostgresDatabase } from "../api/driver";
 async function main() {
   const db = new PostgresDatabase(process.env.DATABASE_URL);
   try {
-    await db.exec(
-      "DROP TABLE users;"
-    );
-    await db.exec(
-      "DROP TABLE recommends;"
-    );
+    await db.exec("DROP TABLE users;");
+    await db.exec("DROP TABLE recommends;");
     await db.exec(
       // prettier-ignore
       createTable<UserEntity>("users").ifNotExist()

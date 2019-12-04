@@ -25,10 +25,9 @@ export interface UserResponse {
 }
 
 export async function execIdentify(
-  origin: string,
   cookies: string
 ): Promise<UserResponse | null> {
-  const result = await fetch(`${origin}/api/users/identify`, {
+  const result = await fetch(`${origin()}/api/users/identify`, {
     headers: { cookie: cookies }
   });
   if (result.ok) {
@@ -46,10 +45,8 @@ export interface CandidateResponse {
   }>;
 }
 
-export async function fetchCandidates(
-  origin: string
-): Promise<CandidateResponse[] | null> {
-  const result = await fetch(`${origin}/api/candidates`);
+export async function fetchCandidates(): Promise<CandidateResponse[] | null> {
+  const result = await fetch(`${origin()}/api/candidates`);
   if (result.ok) {
     return await result.json();
   }
@@ -69,10 +66,9 @@ export function postCandidates(
 }
 
 export async function fetchCandidate(
-  origin: string,
   candidateId: number
 ): Promise<CandidateResponse | null> {
-  const result = await fetch(`${origin}/api/candidates/${candidateId}`);
+  const result = await fetch(`${origin()}/api/candidates/${candidateId}`);
   if (result.ok) {
     return await result.json();
   }
