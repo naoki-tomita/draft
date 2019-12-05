@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Router from "next/router";
+import Link from "next/link";
 import {
   Typography,
   List,
@@ -7,8 +8,7 @@ import {
   ListItemText,
   TextField,
   Button,
-  Breadcrumbs,
-  Link
+  Breadcrumbs
 } from "@material-ui/core";
 import {
   fetchCandidate,
@@ -155,11 +155,23 @@ const CandidatePage: NextPage<Props> = ({ candidate }) => {
     <>
       <div style={{ marginTop: 16, marginBottom: 16 }}>
         <Breadcrumbs>
-          <Link color="inherit" href="/">
-            お薦めする
+          <Link href="/">
+            <Typography
+              component="a"
+              color="inherit"
+              style={{ cursor: "pointer" }}
+            >
+              お薦めする
+            </Typography>
           </Link>
-          <Link color="inherit" href="/candidates">
-            一覧をみる
+          <Link href="/candidates">
+            <Typography
+              component="a"
+              color="inherit"
+              style={{ cursor: "pointer" }}
+            >
+              一覧をみる
+            </Typography>
           </Link>
           <Typography color="textPrimary">{candidate.id}</Typography>
         </Breadcrumbs>
@@ -176,8 +188,8 @@ const CandidatePage: NextPage<Props> = ({ candidate }) => {
 CandidatePage.getInitialProps = async ctx => {
   const { req, query } = ctx;
   const [user, candidate] = await Promise.all([
-    execIdentify(origin(), req.headers.cookie),
-    fetchCandidate(origin(), parseInt(query.id as string, 10))
+    execIdentify(req?.headers?.cookie),
+    fetchCandidate(parseInt(query.id as string, 10))
   ]);
   return {
     candidate: {

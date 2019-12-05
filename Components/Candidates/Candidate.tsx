@@ -7,6 +7,7 @@ import {
   Button,
   Badge
 } from "@material-ui/core";
+import Link from "next/link";
 
 export interface Candidate {
   id: number;
@@ -49,15 +50,13 @@ export const CandidateComponent: FC<Props> = ({ candidate }) => {
             >
               ドラフトページへ
             </Button>
-            {candidate.done ? (
-              <Button href={`/candidates/${candidate.id}`} size="small">
-                コメント一覧
-              </Button>
-            ) : (
-              <Button href={`/candidates/${candidate.id}`} size="small">
-                👍👎する
-              </Button>
-            )}
+            <Link href="/candidates/[id]" as={`/candidates/${candidate.id}`}>
+              {candidate.done ? (
+                <Button size="small">コメント一覧</Button>
+              ) : (
+                <Button size="small">👍👎する</Button>
+              )}
+            </Link>
           </CardActions>
         </Card>
       </Badge>

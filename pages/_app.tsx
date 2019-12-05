@@ -1,4 +1,5 @@
 import App, { AppContext } from "next/app";
+import Link from "next/link";
 import Router from "next/router";
 import "./_app.css";
 import {
@@ -8,7 +9,6 @@ import {
   Typography,
   Button,
   Container,
-  Link,
   Drawer,
   List,
   ListItem,
@@ -52,10 +52,14 @@ export default class MyApp extends App<Props, {}, State> {
 
   static async getInitialProps({ Component, ctx }: AppContext) {
     const { req, res } = ctx;
-    const { cookie } = req.headers;
-    const user = await identify(cookie);
+    const user = await identify(req?.headers?.cookie);
 
-    if (!user && !req.url.includes("/login")) {
+    if (
+      !user &&
+      !(process.browser
+        ? Router.asPath.includes("/login")
+        : req?.url?.includes("/login"))
+    ) {
       process.browser
         ? Router.push("/login")
         : res.writeHead(302, { Location: "/login" }).end();
@@ -86,17 +90,24 @@ export default class MyApp extends App<Props, {}, State> {
             >
               <Menu />
             </IconButton>
-            <Link style={{ flexGrow: 1 }} color="inherit" href="/">
-              <Typography variant="h6">転ドラ候補者を見る</Typography>
+            <Link href="/">
+              <Typography
+                style={{ flexGrow: 1, cursor: "pointer" }}
+                component="a"
+                color="inherit"
+                variant="h6"
+              >
+                転ドラ候補者を見る
+              </Typography>
             </Link>
             {user ? (
               <Button onClick={() => logout()} color="inherit">
                 {user.loginId}
               </Button>
             ) : (
-              <Button href="/login" color="inherit">
-                {"Login"}
-              </Button>
+              <Link href="/login">
+                <Button color="inherit">{"Login"}</Button>
+              </Link>
             )}
           </Toolbar>
         </AppBar>
@@ -110,12 +121,14 @@ export default class MyApp extends App<Props, {}, State> {
           onClose={() => this.setState({ isOpen: false })}
         >
           <List style={{ width: 250 }}>
-            <ListItem component="a" button href="/candidates">
-              <ListItemIcon>
-                <People />
-              </ListItemIcon>
-              <ListItemText primary="候補者一覧" />
-            </ListItem>
+            <Link href="/candidates">
+              <ListItem button onClick={() => this.setState({ isOpen: false })}>
+                <ListItemIcon>
+                  <People />
+                </ListItemIcon>
+                <ListItemText primary="候補者一覧" />
+              </ListItem>
+            </Link>
           </List>
         </Drawer>
       </>

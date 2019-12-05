@@ -1,8 +1,13 @@
 import { NextPage } from "next";
+import Link from "next/link";
 import { CandidatesComponents } from "../../Components/Candidates";
 import { Candidate } from "../../Components/Candidates/Candidate";
 import { fetchCandidates, execIdentify } from "../../api/Client";
-import { Breadcrumbs, Link, Typography } from "@material-ui/core";
+import {
+  Breadcrumbs,
+  Typography,
+  Link as LinkComponent
+} from "@material-ui/core";
 
 interface Props {
   candidates: Candidate[];
@@ -13,8 +18,14 @@ const CandidatesPage: NextPage<Props> = ({ candidates }) => {
     <>
       <div style={{ marginTop: 16 }}>
         <Breadcrumbs>
-          <Link color="inherit" href="/">
-            お薦めする
+          <Link href="/">
+            <LinkComponent
+              component="a"
+              color="inherit"
+              style={{ cursor: "pointer" }}
+            >
+              お薦めする
+            </LinkComponent>
           </Link>
           <Typography color="textPrimary">一覧をみる</Typography>
         </Breadcrumbs>
@@ -26,7 +37,7 @@ const CandidatesPage: NextPage<Props> = ({ candidates }) => {
 
 CandidatesPage.getInitialProps = async ({ req }) => {
   const [user, candidates] = await Promise.all([
-    execIdentify(req.headers.cookie),
+    execIdentify(req?.headers?.cookie || ""),
     fetchCandidates()
   ]);
   return {
